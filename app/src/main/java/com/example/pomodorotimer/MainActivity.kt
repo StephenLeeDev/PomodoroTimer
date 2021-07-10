@@ -1,5 +1,6 @@
 package com.example.pomodorotimer
 
+import android.media.SoundPool
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -22,11 +23,17 @@ class MainActivity : AppCompatActivity() {
 
     private var currentCountDownTimer: CountDownTimer? = null
 
+    private val soundPool = SoundPool.Builder().build()
+
+    private var tickingSoundId: Int? = null
+    private var bellSoundId: Int? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         bindViews()
+        initSound()
     }
 
     private fun bindViews() {
@@ -76,5 +83,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateSeekBar(remainMillis: Long) {
         seekBar.progress = (remainMillis / 60 / 1000).toInt()
+    }
+
+    private fun initSound() {
+        tickingSoundId = soundPool.load(this, R.raw.timer_ticking, 1)
+        bellSoundId = soundPool.load(this, R.raw.timer_bell, 1)
     }
 }
