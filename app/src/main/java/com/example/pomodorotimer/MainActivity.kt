@@ -36,6 +36,16 @@ class MainActivity : AppCompatActivity() {
         initSound()
     }
 
+    override fun onResume() {
+        super.onResume()
+        soundPool.autoResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        soundPool.autoPause()
+    }
+
     private fun bindViews() {
         seekBar.setOnSeekBarChangeListener(
                 object : SeekBar.OnSeekBarChangeListener {
@@ -54,6 +64,11 @@ class MainActivity : AppCompatActivity() {
                         seekBar ?: return
                         currentCountDownTimer = createCountDownTimer(seekBar.progress * 60 * 1000L).start()
                         currentCountDownTimer?.start()
+
+                        tickingSoundId?.let {
+                            soundId ->
+                            soundPool.play(soundId, 1F, 1F, 0, -1, 1F)
+                        }
                     }
 
                 }
