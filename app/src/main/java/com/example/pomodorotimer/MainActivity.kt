@@ -46,6 +46,11 @@ class MainActivity : AppCompatActivity() {
         soundPool.autoPause()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        soundPool.release()
+    }
+
     private fun bindViews() {
         seekBar.setOnSeekBarChangeListener(
                 object : SeekBar.OnSeekBarChangeListener {
@@ -62,15 +67,9 @@ class MainActivity : AppCompatActivity() {
 
                     override fun onStopTrackingTouch(seekBar: SeekBar?) {
                         seekBar ?: return
-                        currentCountDownTimer = createCountDownTimer(seekBar.progress * 60 * 1000L).start()
-                        currentCountDownTimer?.start()
 
-                        tickingSoundId?.let {
-                            soundId ->
-                            soundPool.play(soundId, 1F, 1F, 0, -1, 1F)
-                        }
+                        startCountDown()
                     }
-
                 }
         )
     }
@@ -83,11 +82,29 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
-                updateRemainTime(0)
-                updateSeekBar(0)
+                completeCountDown()
             }
-
         }
+
+    private fun startCountDown() {
+        currentCountDownTimer = createCountDownTimer(seekBar.progress * 60 * 1000L).start()
+        currentCountDownTimer?.start()
+
+        tickingSoundId?.let {
+            soundId ->
+            soundPool.play(soundId, 1F, 1F, 0, -1, 1F)
+        }
+    }
+
+    private fun completeCountDown() {
+        updateRemainTime(0)
+        updateSeekBar(0)
+
+        soundPool.autoPause()
+        bellSoundId?.let { soundId ->
+            soundPool.play(soundId, 1F, 1F, 0, 0, 1F)
+        }
+    }
 
     private fun updateRemainTime(remainMillis: Long) {
         val remainSeconds = remainMillis / 1000
