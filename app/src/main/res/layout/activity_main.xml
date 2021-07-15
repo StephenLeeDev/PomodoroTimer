@@ -37,6 +37,8 @@
         android:max="60"
         android:thumb="@drawable/ic_unfold_less"
         android:background="@color/transparent"
+        android:tickMark="@drawable/tick_mark"
+        android:layout_marginHorizontal="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
