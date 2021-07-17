@@ -61,14 +61,17 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                        currentCountDownTimer?.cancel()
-                        currentCountDownTimer = null
+                        stopCountDown()
                     }
 
                     override fun onStopTrackingTouch(seekBar: SeekBar?) {
                         seekBar ?: return
 
-                        startCountDown()
+                        if (seekBar.progress == 0) {
+                            stopCountDown()
+                        } else {
+                            startCountDown()
+                        }
                     }
                 }
         )
@@ -94,6 +97,12 @@ class MainActivity : AppCompatActivity() {
             soundId ->
             soundPool.play(soundId, 1F, 1F, 0, -1, 1F)
         }
+    }
+
+    private fun stopCountDown() {
+        currentCountDownTimer?.cancel()
+        currentCountDownTimer = null
+        soundPool.autoPause()
     }
 
     private fun completeCountDown() {
